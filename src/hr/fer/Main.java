@@ -14,7 +14,9 @@ public class Main {
         var samples = new Samples(path, numberOfClasses);
         var ga = new GeneticAlgorithm(100, new int[]{2, 8, 3}, samples, 3000000, Math.pow(10, -7));
         ga.setCrossoverRatio(1, 1, 1);
-        ga.setMutationRatio(1, 1);
+        ga.setMutationRatio(1, 1, 1);
+        ga.setMutationFactor(0.2, 1.0, 5.0);
+        ga.setMutationProbability(0.01, 0.01, 0.01);
         var nnResult = ga.run();
         System.out.println("Result: " + nnResult.getFitness());
         int correctClassification = samples.prediction(nnResult);

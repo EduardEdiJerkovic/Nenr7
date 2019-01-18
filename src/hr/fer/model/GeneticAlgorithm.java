@@ -15,7 +15,9 @@ public class GeneticAlgorithm {
     private final INeuralNetworkEvaluator nne;
     private final Random r = new Random();
     private int[] crossoverRatio = new int[]{1, 1, 1};
-    private int[] mutationRatio = new int[]{1, 1};
+    private int[] mutationRatio = new int[]{1, 1, 1};
+    private double[] mutationFactor = new double[]{1.0, 1.0, 1.0};
+    private double[] mutationProbability = new double[]{0.01, 0.01, 0.01};
 
     public GeneticAlgorithm(int populationSize, int[] configuration, INeuralNetworkEvaluator nne, int maxIterations, double epsilon) {
         this.maxIterations = maxIterations;
@@ -33,6 +35,14 @@ public class GeneticAlgorithm {
 
     public void setCrossoverRatio(int... crossoverRatio) {
         this.crossoverRatio = crossoverRatio;
+    }
+
+    public void setMutationFactor(double... mutationFactor) {
+        this.mutationFactor = mutationFactor;
+    }
+
+    public void setMutationProbability(double... mutationProbability) {
+        this.mutationProbability = mutationProbability;
     }
 
     public NeuralNetwork run() {
@@ -152,51 +162,51 @@ public class GeneticAlgorithm {
 
     public NeuralNetwork mutation(NeuralNetwork nn) {
         var option = r.nextDouble();
-        var ratio = IntStream.of(mutationRatio).sum();
-        if (option * ratio < mutationRatio[0]) {
-            return mutation1(nn);
+        var ratio = IntStream.of(crossoverRatio).sum();
+        if (option * ratio < crossoverRatio[0]) {
+            return mutation1(nn, mutationFactor[0], mutationProbability[0]);
+        } else if (option * ratio < crossoverRatio[0] + crossoverRatio[1]) {
+            return mutation1(nn, mutationFactor[1], mutationProbability[1]);
         } else {
-            return mutation2(nn);
+            return mutation2(nn, mutationFactor[2], mutationProbability[0]);
         }
     }
 
-    private NeuralNetwork mutation1(NeuralNetwork nn) {
-        double probability = 0.01;
+    private NeuralNetwork mutation1(NeuralNetwork nn, double factor, double probability) {
         for (int i = 0; i < nn.getConfiguration().length - 1; ++i) {
             for (int j = 0; j < nn.getConfiguration()[i + 1]; ++j) {
                 for (int k = 0; k < nn.getWeights()[i][j].length; ++k) {
                     if (r.nextDouble() < probability) {
-                        nn.getWeights()[i][j][k] = r.nextGaussian() * NeuralNetwork.WEIGHT_VARIANCE;
+                        nn.getWeights()[i][j][k] = r.nextGaussian() * NeuralNetwork.WEIGHT_VARIANCE * factor;
                     }
                 }
                 if (nn.getBiases()[i][j].length > 1) {
                     for (int k = 0; k < nn.getBiases()[i][j].length; ++k) {
                         if (r.nextDouble() < probability) {
-                            nn.getBiases()[i][j][k] = r.nextGaussian() * NeuralNetwork.SCALE_VARIANCE;
+                            nn.getBiases()[i][j][k] = r.nextGaussian() * NeuralNetwork.SCALE_VARIANCE * factor;
                         }
                     }
                 } else {
-                    nn.getBiases()[i][j][0] = r.nextGaussian() * NeuralNetwork.BIAS_VARIANCE;
+                    nn.getBiases()[i][j][0] = r.nextGaussian() * NeuralNetwork.BIAS_VARIANCE * factor;
                 }
             }
         }
         return nn;
     }
 
-    private NeuralNetwork mutation2(NeuralNetwork nn) {
-        double probability = 0.01;
+    private NeuralNetwork mutation2(NeuralNetwork nn, double factor, double probability) {
         for (int i = 0; i < nn.getConfiguration().length - 1; ++i) {
             for (int j = 0; j < nn.getConfiguration()[i + 1]; ++j) {
                 if (r.nextDouble() < probability) {
                     for (int k = 0; k < nn.getWeights()[i][j].length; ++k) {
-                        nn.getWeights()[i][j][k] = r.nextGaussian() * NeuralNetwork.WEIGHT_VARIANCE * 5;
+                        nn.getWeights()[i][j][k] = r.nextGaussian() * NeuralNetwork.WEIGHT_VARIANCE * factor;
                     }
                     if (nn.getBiases()[i][j].length > 1) {
                         for (int k = 0; k < nn.getBiases()[i][j].length; ++k) {
-                            nn.getBiases()[i][j][k] = r.nextGaussian() * NeuralNetwork.SCALE_VARIANCE * 5;
+                            nn.getBiases()[i][j][k] = r.nextGaussian() * NeuralNetwork.SCALE_VARIANCE * factor;
                         }
                     } else {
-                        nn.getBiases()[i][j][0] = r.nextGaussian() * NeuralNetwork.BIAS_VARIANCE * 5;
+                        nn.getBiases()[i][j][0] = r.nextGaussian() * NeuralNetwork.BIAS_VARIANCE * factor;
                     }
                 }
             }
