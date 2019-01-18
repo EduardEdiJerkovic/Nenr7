@@ -33,12 +33,12 @@ public class NeuralNetwork {
                 if (i == 0) {
                     this.biases[i][j] = new double[configuration[i]];
                     for (int k = 0; k < this.biases[i][j].length; k++) {
-                        this.weights[i][j][k] = r.nextGaussian() * SCALE_VARIANCE;
+                        this.biases[i][j][k] = r.nextGaussian() * SCALE_VARIANCE;
                     }
                 } else {
                     this.biases[i][j] = new double[1];
                     for (int k = 0; k < this.biases[i][j].length; k++) {
-                        this.weights[i][j][k] = r.nextGaussian() * BIAS_VARIANCE;
+                        this.biases[i][j][k] = r.nextGaussian() * BIAS_VARIANCE;
                     }
                 }
             }

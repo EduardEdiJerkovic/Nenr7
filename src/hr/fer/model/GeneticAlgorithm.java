@@ -65,14 +65,14 @@ public class GeneticAlgorithm {
         for (int i = 1; i < nn1.getConfiguration().length; ++i) {
             for (int j = 0; i < nn1.getConfiguration()[i]; ++j) {
                 for (int k = 0; k < w1[i][j].length; ++k) {
-                    if (r.nextInt(1) == 1) {
+                    if (r.nextInt(2) == 1) {
                         c.getWeights()[i][j][k] = w2[i][j][k];
                     } else {
                         c.getWeights()[i][j][k] = w1[i][j][k];
                     }
                 }
                 for (int k = 0; k < b1[i][j].length; ++k) {
-                    if (r.nextInt(1) == 1) {
+                    if (r.nextInt(2) == 1) {
                         c.getBiases()[i][j][k] = b2[i][j][k];
                     } else {
                         c.getBiases()[i][j][k] = b1[i][j][k];
@@ -98,7 +98,7 @@ public class GeneticAlgorithm {
         double[][][] b2 = nn2.getBiases();
         for (int i = 1; i < nn1.getConfiguration().length; ++i) {
             for (int j = 0; i < nn1.getConfiguration()[i]; ++j) {
-                if (r.nextInt(1) == 1) {
+                if (r.nextInt(2) == 1) {
                     c.getWeights()[i][j] = w2[i][j];
                     c.getBiases()[i][j] = b2[i][j];
                 } else {
