@@ -25,6 +25,9 @@ public class GeneticAlgorithm {
     public NeuralNetwork run() {
         for (int iteration = 0; iteration < maxIterations; ++iteration) {
             population.sort((nn1, nn2) -> (int) Math.signum(nn1.getFitness() - nn2.getFitness()));
+            if (iteration % 1000 == 0) {
+                System.out.println("Iteration" + iteration + ": " + population.get(0).getFitness());
+            }
             List<Integer> parentIndexes = pickParents(3);
             Collections.sort(parentIndexes);
             NeuralNetwork child = crossover(population.get(parentIndexes.get(0)), population.get(parentIndexes.get(1)));
@@ -100,11 +103,11 @@ public class GeneticAlgorithm {
         for (int i = 0; i < nn1.getConfiguration().length - 1; ++i) {
             for (int j = 0; j < nn1.getConfiguration()[i + 1]; ++j) {
                 if (r.nextInt(2) == 1) {
-                    c.getWeights()[i][j] = w2[i][j];
-                    c.getBiases()[i][j] = b2[i][j];
+                    c.getWeights()[i][j] = w2[i][j].clone();
+                    c.getBiases()[i][j] = b2[i][j].clone();
                 } else {
-                    c.getWeights()[i][j] = w1[i][j];
-                    c.getBiases()[i][j] = b1[i][j];
+                    c.getWeights()[i][j] = w1[i][j].clone();
+                    c.getBiases()[i][j] = b1[i][j].clone();
                 }
             }
         }

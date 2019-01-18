@@ -10,9 +10,9 @@ public class NeuralNetwork {
     private int[] configuration;
 
     private static Random r = new Random();
-    public static final double WEIGHT_VARIANCE = 1.0;
-    public static final double BIAS_VARIANCE = 1.0;
-    public static final double SCALE_VARIANCE = 1.0;
+    public static final double WEIGHT_VARIANCE = 100.0;
+    public static final double BIAS_VARIANCE = 10.0;
+    public static final double SCALE_VARIANCE = 10.0;
 
     public NeuralNetwork(int... configuration) {
         this.configuration = configuration;

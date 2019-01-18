@@ -47,6 +47,6 @@ public class Samples implements INeuralNetworkEvaluator {
                 error += Math.pow(nnPrediction[i] - s.getClassification()[i], 2);
             }
         }
-        return error;
+        return error / this.samples.size();
     }
 }
