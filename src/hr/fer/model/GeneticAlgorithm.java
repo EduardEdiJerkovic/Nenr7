@@ -28,6 +28,7 @@ public class GeneticAlgorithm {
             List<Integer> parentIndexes = pickParents(3);
             Collections.sort(parentIndexes);
             NeuralNetwork child = crossover(population.get(parentIndexes.get(0)), population.get(parentIndexes.get(1)));
+            child = mutation(child);
             child.evaluateFitness(nne);
             population.set(parentIndexes.get(2), child);
         }
@@ -62,8 +63,8 @@ public class GeneticAlgorithm {
         double[][][] w2 = nn2.getWeights();
         double[][][] b1 = nn1.getBiases();
         double[][][] b2 = nn2.getBiases();
-        for (int i = 1; i < nn1.getConfiguration().length; ++i) {
-            for (int j = 0; i < nn1.getConfiguration()[i]; ++j) {
+        for (int i = 0; i < nn1.getConfiguration().length - 1; ++i) {
+            for (int j = 0; j < nn1.getConfiguration()[i + 1]; ++j) {
                 for (int k = 0; k < w1[i][j].length; ++k) {
                     if (r.nextInt(2) == 1) {
                         c.getWeights()[i][j][k] = w2[i][j][k];
@@ -96,8 +97,8 @@ public class GeneticAlgorithm {
         double[][][] w2 = nn2.getWeights();
         double[][][] b1 = nn1.getBiases();
         double[][][] b2 = nn2.getBiases();
-        for (int i = 1; i < nn1.getConfiguration().length; ++i) {
-            for (int j = 0; i < nn1.getConfiguration()[i]; ++j) {
+        for (int i = 0; i < nn1.getConfiguration().length - 1; ++i) {
+            for (int j = 0; j < nn1.getConfiguration()[i + 1]; ++j) {
                 if (r.nextInt(2) == 1) {
                     c.getWeights()[i][j] = w2[i][j];
                     c.getBiases()[i][j] = b2[i][j];
@@ -116,8 +117,8 @@ public class GeneticAlgorithm {
         double[][][] w2 = nn2.getWeights();
         double[][][] b1 = nn1.getBiases();
         double[][][] b2 = nn2.getBiases();
-        for (int i = 1; i < nn1.getConfiguration().length; ++i) {
-            for (int j = 0; i < nn1.getConfiguration()[i]; ++j) {
+        for (int i = 0; i < nn1.getConfiguration().length - 1; ++i) {
+            for (int j = 0; j < nn1.getConfiguration()[i + 1]; ++j) {
                 for (int k = 0; k < w1[i][j].length; ++k) {
                     double a = r.nextDouble();
                     c.getWeights()[i][j][k] = (1 - a) * w1[i][j][k] + a * w2[i][j][k];
@@ -145,8 +146,8 @@ public class GeneticAlgorithm {
 
     private NeuralNetwork mutation1(NeuralNetwork nn) {
         double probability = 0.01;
-        for (int i = 1; i < nn.getConfiguration().length; ++i) {
-            for (int j = 0; i < nn.getConfiguration()[i]; ++j) {
+        for (int i = 0; i < nn.getConfiguration().length - 1; ++i) {
+            for (int j = 0; j < nn.getConfiguration()[i + 1]; ++j) {
                 for (int k = 0; k < nn.getWeights()[i][j].length; ++k) {
                     if (r.nextDouble() < probability) {
                         nn.getWeights()[i][j][k] = r.nextGaussian() * NeuralNetwork.WEIGHT_VARIANCE;
@@ -168,8 +169,8 @@ public class GeneticAlgorithm {
 
     private NeuralNetwork mutation2(NeuralNetwork nn) {
         double probability = 0.01;
-        for (int i = 1; i < nn.getConfiguration().length; ++i) {
-            for (int j = 0; i < nn.getConfiguration()[i]; ++j) {
+        for (int i = 0; i < nn.getConfiguration().length - 1; ++i) {
+            for (int j = 0; j < nn.getConfiguration()[i + 1]; ++j) {
                 if (r.nextDouble() < probability) {
                     for (int k = 0; k < nn.getWeights()[i][j].length; ++k) {
                         nn.getWeights()[i][j][k] = r.nextGaussian() * NeuralNetwork.WEIGHT_VARIANCE;
