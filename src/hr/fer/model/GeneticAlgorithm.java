@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Random;
+import java.util.stream.IntStream;
 
 public class GeneticAlgorithm {
 
@@ -13,7 +14,8 @@ public class GeneticAlgorithm {
     private final double epsilon;
     private final INeuralNetworkEvaluator nne;
     private final Random r = new Random();
-    private double[] crossoverProbab;
+    private int[] crossoverRatio = new int[]{1, 1, 1};
+    private int[] mutationRatio = new int[]{1, 1};
 
     public GeneticAlgorithm(int populationSize, int[] configuration, INeuralNetworkEvaluator nne, int maxIterations, double epsilon) {
         this.maxIterations = maxIterations;
@@ -23,6 +25,14 @@ public class GeneticAlgorithm {
             population.add(new NeuralNetwork(configuration));
         }
         population.forEach(nn -> nn.evaluateFitness(nne));
+    }
+
+    public void setMutationRatio(int... mutationRatio) {
+        this.mutationRatio = mutationRatio;
+    }
+
+    public void setCrossoverRatio(int... crossoverRatio) {
+        this.crossoverRatio = crossoverRatio;
     }
 
     public NeuralNetwork run() {
@@ -47,16 +57,14 @@ public class GeneticAlgorithm {
     }
 
     public NeuralNetwork crossover(NeuralNetwork nn1, NeuralNetwork nn2) {
-        int option = r.nextInt(3);
-        switch (option) {
-            case 0:
-                return crossover1(nn1, nn2);
-            case 1:
-                return crossover2(nn1, nn2);
-            case 2:
-                return crossover3(nn1, nn2);
-            default:
-                return null;
+        var option = r.nextDouble();
+        var ratio = IntStream.of(crossoverRatio).sum();
+        if (option * ratio < crossoverRatio[0]) {
+            return crossover1(nn1, nn2);
+        } else if (option * ratio < crossoverRatio[0] + crossoverRatio[1]) {
+            return crossover2(nn1, nn2);
+        } else {
+            return crossover3(nn1, nn2);
         }
     }
 
@@ -143,14 +151,12 @@ public class GeneticAlgorithm {
     }
 
     public NeuralNetwork mutation(NeuralNetwork nn) {
-        int option = r.nextInt(2);
-        switch (option) {
-            case 0:
-                return mutation1(nn);
-            case 1:
-                return mutation2(nn);
-            default:
-                return null;
+        var option = r.nextDouble();
+        var ratio = IntStream.of(mutationRatio).sum();
+        if (option * ratio < mutationRatio[0]) {
+            return mutation1(nn);
+        } else {
+            return mutation2(nn);
         }
     }
 
