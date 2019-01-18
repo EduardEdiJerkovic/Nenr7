@@ -57,27 +57,30 @@ public class GeneticAlgorithm {
      * @return New neural network (child) of two given parents.
      */
     private NeuralNetwork crossover1(NeuralNetwork nn1, NeuralNetwork nn2) {
+        var c = new NeuralNetwork(nn1.getConfiguration());
         double[][][] w1 = nn1.getWeights();
         double[][][] w2 = nn2.getWeights();
         double[][][] b1 = nn1.getBiases();
         double[][][] b2 = nn2.getBiases();
-        double[][][] wc = nn1.getWeights();
-        double[][][] bc = nn1.getBiases();
         for (int i = 1; i < nn1.getConfiguration().length; ++i) {
             for (int j = 0; i < nn1.getConfiguration()[i]; ++j) {
                 for (int k = 0; k < w1[i][j].length; ++k) {
                     if (r.nextInt(1) == 1) {
-                        wc[i][j][k] = w2[i][j][k];
+                        c.getWeights()[i][j][k] = w2[i][j][k];
+                    } else {
+                        c.getWeights()[i][j][k] = w1[i][j][k];
                     }
                 }
                 for (int k = 0; k < b1[i][j].length; ++k) {
                     if (r.nextInt(1) == 1) {
-                        bc[i][j][k] = b2[i][j][k];
+                        c.getBiases()[i][j][k] = b2[i][j][k];
+                    } else {
+                        c.getBiases()[i][j][k] = b1[i][j][k];
                     }
                 }
             }
         }
-        return new NeuralNetwork(nn1.getConfiguration(), wc, bc);
+        return c;
     }
 
     /***
@@ -88,43 +91,44 @@ public class GeneticAlgorithm {
      * @return New neural network (child) of two given parents.
      */
     private NeuralNetwork crossover2(NeuralNetwork nn1, NeuralNetwork nn2) {
+        var c = new NeuralNetwork(nn1.getConfiguration());
         double[][][] w1 = nn1.getWeights();
         double[][][] w2 = nn2.getWeights();
         double[][][] b1 = nn1.getBiases();
         double[][][] b2 = nn2.getBiases();
-        double[][][] wc = nn1.getWeights();
-        double[][][] bc = nn1.getBiases();
         for (int i = 1; i < nn1.getConfiguration().length; ++i) {
             for (int j = 0; i < nn1.getConfiguration()[i]; ++j) {
                 if (r.nextInt(1) == 1) {
-                    wc[i][j] = w2[i][j];
-                    bc[i][j] = b2[i][j];
+                    c.getWeights()[i][j] = w2[i][j];
+                    c.getBiases()[i][j] = b2[i][j];
+                } else {
+                    c.getWeights()[i][j] = w1[i][j];
+                    c.getBiases()[i][j] = b1[i][j];
                 }
             }
         }
-        return new NeuralNetwork(nn1.getConfiguration(), wc, bc);
+        return c;
     }
 
     private NeuralNetwork crossover3(NeuralNetwork nn1, NeuralNetwork nn2) {
+        var c = new NeuralNetwork(nn1.getConfiguration());
         double[][][] w1 = nn1.getWeights();
         double[][][] w2 = nn2.getWeights();
         double[][][] b1 = nn1.getBiases();
         double[][][] b2 = nn2.getBiases();
-        double[][][] wc = nn1.getWeights();
-        double[][][] bc = nn1.getBiases();
         for (int i = 1; i < nn1.getConfiguration().length; ++i) {
             for (int j = 0; i < nn1.getConfiguration()[i]; ++j) {
                 for (int k = 0; k < w1[i][j].length; ++k) {
                     double a = r.nextDouble();
-                    wc[i][j][k] = (1 - a) * w1[i][j][k] + a * w2[i][j][k];
+                    c.getWeights()[i][j][k] = (1 - a) * w1[i][j][k] + a * w2[i][j][k];
                 }
                 for (int k = 0; k < b1[i][j].length; ++k) {
                     double a = r.nextGaussian();
-                    bc[i][j][k] = (1 - a) * b1[i][j][k] + a * b2[i][j][k];
+                    c.getBiases()[i][j][k] = (1 - a) * b1[i][j][k] + a * b2[i][j][k];
                 }
             }
         }
-        return new NeuralNetwork(nn1.getConfiguration(), wc, bc);
+        return c;
     }
 
     public NeuralNetwork mutation(NeuralNetwork nn) {

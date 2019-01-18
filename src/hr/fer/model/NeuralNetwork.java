@@ -26,12 +26,12 @@ public class NeuralNetwork {
             this.weights[i] = new double[configuration[i + 1]][];
             this.biases[i] = new double[configuration[i + 1]][];
             for (int j = 0; j < configuration[i + 1]; ++j) {
-                this.weights[i][j] = new double[configuration[i + 1]];
-                for (int k = 0; k < configuration[i + 1]; ++k) {
+                this.weights[i][j] = new double[configuration[i]];
+                for (int k = 0; k < configuration[i]; ++k) {
                     this.weights[i][j][k] = r.nextGaussian() * WEIGHT_VARIANCE;
                 }
                 if (i == 0) {
-                    this.biases[i][j] = new double[configuration[i + 1]];
+                    this.biases[i][j] = new double[configuration[i]];
                     for (int k = 0; k < this.biases[i][j].length; k++) {
                         this.weights[i][j][k] = r.nextGaussian() * SCALE_VARIANCE;
                     }
@@ -99,7 +99,7 @@ public class NeuralNetwork {
                 }
             }
         }
-        return this.cache[this.weights.length - 1];
+        return this.cache[this.weights.length];
     }
 
     public String toString() {
