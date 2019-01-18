@@ -139,6 +139,13 @@ public class GeneticAlgorithm {
         return c;
     }
 
+    /**
+     * Crossover function with algorithm that creates child with linear combination of every pair of parent genes.
+     *
+     * @param nn1 First parent.
+     * @param nn2 Second parent.
+     * @return New neural network (child) of two given parents.
+     */
     private NeuralNetwork crossover3(NeuralNetwork nn1, NeuralNetwork nn2) {
         var c = new NeuralNetwork(nn1.getConfiguration());
         double[][][] w1 = nn1.getWeights();
@@ -172,6 +179,14 @@ public class GeneticAlgorithm {
         }
     }
 
+    /**
+     * Mutation function with algorithm that changes every gene with given probability.
+     *
+     * @param nn Neural network that you want to mutate.
+     * @param factor Factor for standard deviation.
+     * @param probability Probability of every mutation.
+     * @return Mutated neural network.
+     */
     private NeuralNetwork mutation1(NeuralNetwork nn, double factor, double probability) {
         for (int i = 0; i < nn.getConfiguration().length - 1; ++i) {
             for (int j = 0; j < nn.getConfiguration()[i + 1]; ++j) {
@@ -194,6 +209,14 @@ public class GeneticAlgorithm {
         return nn;
     }
 
+    /**
+     * Mutation function with algorithm that changes whole node at once.
+     *
+     * @param nn Neural network that you want to mutate.
+     * @param factor Factor for standard deviation.
+     * @param probability Probability of every mutation.
+     * @return Mutated neural network.
+     */
     private NeuralNetwork mutation2(NeuralNetwork nn, double factor, double probability) {
         for (int i = 0; i < nn.getConfiguration().length - 1; ++i) {
             for (int j = 0; j < nn.getConfiguration()[i + 1]; ++j) {
@@ -226,12 +249,5 @@ public class GeneticAlgorithm {
         }
 
         return indexes;
-
-        /*var result = new NeuralNetwork[size];
-        for (int i = 0; i < size; ++i) {
-            result[i] = this.population.get(indexes.get(i));
-        }
-
-        return result;*/
     }
 }
