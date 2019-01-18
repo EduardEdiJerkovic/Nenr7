@@ -84,7 +84,7 @@ public class NeuralNetwork {
                     //var cache = this.cache[i + 1][j];
                     this.cache[i + 1][j] = 0;
                     for (int k = 0; k < this.weights[i][j].length; ++k) {
-                        this.cache[i + 1][j] += (this.cache[i][k] - this.weights[i][j][k]) / this.biases[i][j][k];
+                        this.cache[i + 1][j] += Math.abs(this.cache[i][k] - this.weights[i][j][k]) / this.biases[i][j][k];
                     }
                     this.cache[i + 1][j] = 1 / (1 + this.cache[i + 1][j]);
                 }
