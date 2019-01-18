@@ -10,8 +10,8 @@ public class NeuralNetwork {
     private int[] configuration;
 
     private static Random r = new Random();
-    public static final double WEIGHT_VARIANCE = 100.0;
-    public static final double BIAS_VARIANCE = 10.0;
+    public static final double WEIGHT_VARIANCE = 10.0;
+    public static final double BIAS_VARIANCE = 100.0;
     public static final double SCALE_VARIANCE = 10.0;
 
     public NeuralNetwork(int... configuration) {
@@ -100,10 +100,5 @@ public class NeuralNetwork {
             }
         }
         return this.cache[this.weights.length];
-    }
-
-    public String toString() {
-        var result = "";
-        return result;
     }
 }

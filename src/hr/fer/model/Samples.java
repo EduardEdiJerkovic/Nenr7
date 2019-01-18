@@ -39,6 +39,10 @@ public class Samples implements INeuralNetworkEvaluator {
         return this.samples.get(index);
     }
 
+    public int getSaplesSize() {
+        return samples.size();
+    }
+
     public double errorEvaluation(NeuralNetwork nn) {
         double error = 0.0;
         for (Sample s : this.samples) {
@@ -48,5 +52,40 @@ public class Samples implements INeuralNetworkEvaluator {
             }
         }
         return error / this.samples.size();
+    }
+
+    public int prediction(NeuralNetwork nn) {
+        int predictionCount = 0;
+        for (var s : this.samples) {
+            int[] result = new int[this.numberOfClasses];
+            var value = nn.valueOf(s.getPoint());
+            for (int i = 0; i < nn.valueOf(s.getPoint()).length; ++i) {
+                result[i] = value[i] < 0.5 ? 0 : 1;
+            }
+            for (int i = 0; i < result.length; ++i) {
+
+            }
+            var print = s.toString();
+            print += "prediction: ";
+            for (var r : result) {
+                print += r + "\t";
+            }
+            boolean prediction = true;
+            for (int i = 0; i < numberOfClasses; ++i) {
+                if (result[i] != s.getIntClassification()[i]) {
+                    prediction = false;
+                    break;
+                }
+            }
+            print += "predict: ";
+            if (prediction) {
+                predictionCount++;
+                print += "True";
+            } else {
+                print += "False";
+            }
+            System.out.println(print);
+        }
+        return predictionCount;
     }
 }

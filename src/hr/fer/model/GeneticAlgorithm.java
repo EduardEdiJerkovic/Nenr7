@@ -10,11 +10,14 @@ public class GeneticAlgorithm {
 
     private List<NeuralNetwork> population = new ArrayList<>();
     private final int maxIterations;
+    private final double epsilon;
     private final INeuralNetworkEvaluator nne;
     private final Random r = new Random();
+    private double[] crossoverProbab;
 
-    public GeneticAlgorithm(int populationSize, int[] configuration, INeuralNetworkEvaluator nne, int maxIterations) {
+    public GeneticAlgorithm(int populationSize, int[] configuration, INeuralNetworkEvaluator nne, int maxIterations, double epsilon) {
         this.maxIterations = maxIterations;
+        this.epsilon = epsilon;
         this.nne = nne;
         for (int i = 0; i < populationSize; ++i) {
             population.add(new NeuralNetwork(configuration));
@@ -25,7 +28,11 @@ public class GeneticAlgorithm {
     public NeuralNetwork run() {
         for (int iteration = 0; iteration < maxIterations; ++iteration) {
             population.sort((nn1, nn2) -> (int) Math.signum(nn1.getFitness() - nn2.getFitness()));
-            if (iteration % 1000 == 0) {
+            if (population.get(0).getFitness() < epsilon) {
+                System.out.println("Iteration: " + iteration);
+                return population.get(0);
+            }
+            if (iteration % (maxIterations / population.size()) == 0) {
                 System.out.println("Iteration" + iteration + ": " + population.get(0).getFitness());
             }
             List<Integer> parentIndexes = pickParents(3);
@@ -176,14 +183,14 @@ public class GeneticAlgorithm {
             for (int j = 0; j < nn.getConfiguration()[i + 1]; ++j) {
                 if (r.nextDouble() < probability) {
                     for (int k = 0; k < nn.getWeights()[i][j].length; ++k) {
-                        nn.getWeights()[i][j][k] = r.nextGaussian() * NeuralNetwork.WEIGHT_VARIANCE;
+                        nn.getWeights()[i][j][k] = r.nextGaussian() * NeuralNetwork.WEIGHT_VARIANCE * 5;
                     }
                     if (nn.getBiases()[i][j].length > 1) {
                         for (int k = 0; k < nn.getBiases()[i][j].length; ++k) {
-                            nn.getBiases()[i][j][k] = r.nextGaussian() * NeuralNetwork.SCALE_VARIANCE;
+                            nn.getBiases()[i][j][k] = r.nextGaussian() * NeuralNetwork.SCALE_VARIANCE * 5;
                         }
                     } else {
-                        nn.getBiases()[i][j][0] = r.nextGaussian() * NeuralNetwork.BIAS_VARIANCE;
+                        nn.getBiases()[i][j][0] = r.nextGaussian() * NeuralNetwork.BIAS_VARIANCE * 5;
                     }
                 }
             }

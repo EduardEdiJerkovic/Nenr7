@@ -12,8 +12,10 @@ public class Main {
         int numberOfClasses = 3;
 
         var samples = new Samples(path, numberOfClasses);
-        var ga = new GeneticAlgorithm(100, new int[]{2, 8, 3}, samples, 1000000);
+        var ga = new GeneticAlgorithm(100, new int[]{2, 8, 4, 3}, samples, 3000000, Math.pow(10, -7));
         var nnResult = ga.run();
         System.out.println("Result: " + nnResult.getFitness());
+        int correctClassification = samples.prediction(nnResult);
+        System.out.println("Correct classified: " + correctClassification + " out of " + samples.getSaplesSize());
     }
 }
